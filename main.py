@@ -30,18 +30,26 @@ def check_birthday():
 def send_email():
     """Sends an email to the user on their birthday"""
     birthday_dict = check_birthday()
-    letter_path = f"letter_templates/letter_{random.randint(1, 3)}.txt"
-    with open(letter_path, "r") as file:
-        content = file.read()
-        content = content.replace("[NAME]", birthday_dict["name"])
-        content = content.replace("[SENDER NAME]", "Divine Demon")
 
-    with smtplib.SMTP("smtp.gmail.com") as connection:
-        connection.starttls()
-        connection.login(user=my_gmail, password=password_gmail)
-        connection.sendmail(from_addr=my_gmail,
-                            to_addrs=birthday_dict["email"],
-                            msg=f"subject:Happy Birthday!\n\n{content}")
+    if birthday_dict is None:
+        print("No birthdays today.")
+        return
+
+    else:
+        letter_path = f"letter_templates/letter_{random.randint(1, 3)}.txt"
+        with open(letter_path, "r") as file:
+            content = file.read()
+            content = content.replace("[NAME]", birthday_dict["name"])
+            content = content.replace("[SENDER NAME]", "Divine Demon")
+
+        with smtplib.SMTP("smtp.gmail.com") as connection:
+            connection.starttls()
+            connection.login(user=my_gmail, password=password_gmail)
+            connection.sendmail(from_addr=my_gmail,
+                                to_addrs=birthday_dict["email"],
+                                msg=f"subject:Happy Birthday!\n\n{content}")
+        print(f"Email sent to {birthday_dict['name']} at "
+              f"{birthday_dict['email']}")
 
 
 send_email()
